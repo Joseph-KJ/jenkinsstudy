@@ -1,1 +1,1 @@
-<?php echo 'deployment test phase1'; ?>
+<?php echo 'deployment test phase2'; ?>
