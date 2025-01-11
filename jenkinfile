@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Joseph-KJ/jenkinsstudy.git'
+            }
+        }
+        
+        stage('Deploy PHP Application') {
+            steps {
+                sshagent(['9d168b58-4e1a-4252-9971-9b73d8ade3d7']) {
+                    sh '''
+                    scp -r index.php ubuntu@35.154.151.229:/var/www/html/
+                    ssh ubuntu@35.154.151.229 "sudo systemctl restart apache2"
+                    '''
+                }
+            }
+        }
+            }
+    post {
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed. Check logs for details.'
+        }
+    }
+}
