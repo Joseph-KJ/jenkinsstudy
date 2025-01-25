@@ -1,1 +1,0 @@
-<?php echo 'Aksa chako - chacko nalla kochanu ennu njan pareyunilla'; ?>
