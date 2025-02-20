@@ -13,7 +13,7 @@ pipeline {
                                     userRemoteConfigs: [[
                                         url: 'https://github.com/Joseph-KJ/jenkinsstudy.git',
                                         credentialsId: '0ff32528-117d-4d50-8a9c-e4b1ab0f1be4'
-                                    ]]
+                                    ]])
             }
         }
 
