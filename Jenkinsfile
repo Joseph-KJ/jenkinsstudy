@@ -10,12 +10,7 @@ pipeline {
             steps {
                 sshagent(['0ff32528-117d-4d50-8a9c-e4b1ab0f1be4']) {
                     sh '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@3.111.36.100 << EOF
-                    cd /home/ubuntu/employee-management || git clone https://github.com/Joseph-KJ/jenkinsstudy.git /home/ubuntu/employee-management
-                    cd /home/ubuntu/employee-management
-                    git pull origin main
-                    docker-compose up -d --build
-                    EOF
+                    ssh -o StrictHostKeyChecking=no ubuntu@3.111.36.100 "cd /home/ubuntu/employee-management && docker-compose pull && docker-compose up -d"
                     '''
                 }
             }
