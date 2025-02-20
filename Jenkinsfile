@@ -1,33 +1,29 @@
 pipeline {
     agent any
 
-    environment {
-        DEPLOY_SERVER = "ubuntu@<DEPLOYMENT_SERVER_IP>"
-        PROJECT_DIR = "/home/ubuntu/employee-management1"
-    }
-
     stages {
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                    checkout scmGit(branches: [[name: 'main']], 
-                                    userRemoteConfigs: [[
-                                        url: 'https://github.com/Joseph-KJ/jenkinsstudy.git',
-                                        credentialsId: '0ff32528-117d-4d50-8a9c-e4b1ab0f1be4'
-                                    ]])
+                git 'https://github.com/your-repo/employee-management.git'
             }
         }
         
-        stage('Deploy to Server') {
+        stage('Build & Push Docker Images') {
             steps {
-                sshagent(['0ff32528-117d-4d50-8a9c-e4b1ab0f1be4']) {
-                    sh """
-                        ssh -o StrictHostKeyChecking=no $DEPLOY_SERVER << EOF
-                        cd $PROJECT_DIR
-                        git pull origin main
-                        docker-compose down
-                        docker-compose up -d --build
-                        EOF
-                    """
+                sh '''
+                docker-compose down
+                docker-compose build
+                docker-compose up -d
+                '''
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                sshagent(['jenkins-ssh-key']) {
+                    sh '''
+                    ssh -o StrictHostKeyChecking=no ubuntu@<EC2_INSTANCE_1> "cd /home/ubuntu/employee-management && docker-compose pull && docker-compose up -d"
+                    '''
                 }
             }
         }
