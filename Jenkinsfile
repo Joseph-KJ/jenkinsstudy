@@ -16,13 +16,7 @@ pipeline {
                                     ]])
             }
         }
-
-        stage('Build Docker Images') {
-            steps {
-                sh 'docker-compose build'
-            }
-        }
-
+        
         stage('Deploy to Server') {
             steps {
                 sshagent(['0ff32528-117d-4d50-8a9c-e4b1ab0f1be4']) {
