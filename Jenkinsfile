@@ -10,21 +10,17 @@ pipeline {
             }
         }
         
-        stage('Build & Push Docker Images') {
-            steps {
-                sh '''
-                docker-compose down
-                docker-compose build
-                docker-compose up -d
-                '''
-            }
-        }
-        
+
         stage('Deploy') {
             steps {
                 sshagent(['0ff32528-117d-4d50-8a9c-e4b1ab0f1be4']) {
                     sh '''
-                    ssh -o StrictHostKeyChecking=no ubuntu@3.111.36.100> "cd /home/ubuntu/employee-management && docker-compose pull && docker-compose up -d"
+                    ssh ubuntu@3.111.36.100 << EOF
+                    cd /home/ubuntu/app
+                    git pull origin main
+                    docker-compose down
+                    docker-compose up -d --build
+                    EOF
                     '''
                 }
             }
