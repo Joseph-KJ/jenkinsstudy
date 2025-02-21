@@ -49,7 +49,8 @@ $result = $conn->query("SELECT * FROM employees");
             border-radius: 8px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: 400px;
+            width: 90%;
+            max-width: 800px;
             margin-bottom: 20px;
         }
         table {
@@ -89,6 +90,10 @@ $result = $conn->query("SELECT * FROM employees");
         .delete-button:hover {
             background: #c82333;
         }
+        .actions {
+            display: flex;
+            gap: 5px;
+        }
     </style>
 </head>
 <body>
@@ -116,7 +121,7 @@ $result = $conn->query("SELECT * FROM employees");
                 <td><?php echo $row['id']; ?></td>
                 <td><?php echo $row['name']; ?></td>
                 <td><?php echo $row['email']; ?></td>
-                <td>
+                <td class="actions">
                     <form method="POST" style="display:inline-block;">
                         <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
                         <input type="text" name="name" value="<?php echo $row['name']; ?>" required>
