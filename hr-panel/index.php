@@ -12,11 +12,17 @@ if ($conn->connect_error) {
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $id = $_POST["id"];
-    $name = $_POST["name"];
-    $email = $_POST["email"];
-    $sql = "UPDATE employees SET name='$name', email='$email' WHERE id=$id";
-    $conn->query($sql);
+    if (isset($_POST["update"])) {
+        $id = $_POST["id"];
+        $name = $_POST["name"];
+        $email = $_POST["email"];
+        $sql = "UPDATE employees SET name='$name', email='$email' WHERE id=$id";
+        $conn->query($sql);
+    } elseif (isset($_POST["delete"])) {
+        $id = $_POST["id"];
+        $sql = "DELETE FROM employees WHERE id=$id";
+        $conn->query($sql);
+    }
 }
 
 $result = $conn->query("SELECT * FROM employees");
@@ -44,6 +50,7 @@ $result = $conn->query("SELECT * FROM employees");
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
             width: 400px;
+            margin-bottom: 20px;
         }
         table {
             width: 100%;
@@ -76,6 +83,12 @@ $result = $conn->query("SELECT * FROM employees");
         button:hover {
             background: #0056b3;
         }
+        .delete-button {
+            background: #dc3545;
+        }
+        .delete-button:hover {
+            background: #c82333;
+        }
     </style>
 </head>
 <body>
@@ -85,7 +98,7 @@ $result = $conn->query("SELECT * FROM employees");
             <input type="text" name="id" placeholder="Enter Employee ID" required>
             <input type="text" name="name" placeholder="Enter New Name" required>
             <input type="email" name="email" placeholder="Enter New Email" required>
-            <button type="submit">Update</button>
+            <button type="submit" name="update">Update</button>
         </form>
     </div>
     
@@ -96,7 +109,7 @@ $result = $conn->query("SELECT * FROM employees");
                 <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
-                <th>Action</th>
+                <th>Actions</th>
             </tr>
             <?php while ($row = $result->fetch_assoc()) { ?>
             <tr>
@@ -104,11 +117,15 @@ $result = $conn->query("SELECT * FROM employees");
                 <td><?php echo $row['name']; ?></td>
                 <td><?php echo $row['email']; ?></td>
                 <td>
-                    <form method="POST">
+                    <form method="POST" style="display:inline-block;">
                         <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
                         <input type="text" name="name" value="<?php echo $row['name']; ?>" required>
                         <input type="email" name="email" value="<?php echo $row['email']; ?>" required>
-                        <button type="submit">Update</button>
+                        <button type="submit" name="update">Update</button>
+                    </form>
+                    <form method="POST" style="display:inline-block;">
+                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                        <button type="submit" name="delete" class="delete-button">Delete</button>
                     </form>
                 </td>
             </tr>
